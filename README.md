@@ -38,12 +38,12 @@ Supported control states include:
 
 CarbonGuard is explicitly engineered around the judging rubric.
 
-| Rubric pillar | Weight | CarbonGuard evidence |
-|---|---:|---|
-| **Lyzr Architecture & Tool Calling** | **30%** | Five specialized Lyzr agents, Lyzr SuperFlow orchestration, deterministic OpenAPI tools, explicit handoff contracts, Agent → Tool → Agent boundaries |
-| **Emission Calculation Accuracy** | **30%** | Official 2026 factor dataset, hard constraint matching, deterministic calculator, exact units/formulas, fail-closed unresolved-factor behavior |
-| **Auditability & Traceability** | **20%** | Source record → activity → scope → factor → formula → result → governance → disclosure lineage |
-| **Sustainability Dashboard UX** | **20%** | Action-oriented governance state, Scope KPIs, factor/formula evidence, audit trail and disclosure readiness |
+| Rubric pillar |  CarbonGuard evidence |
+|---|---|
+| **Lyzr Architecture & Tool Calling**   | Five specialized Lyzr agents, Lyzr SuperFlow orchestration, deterministic OpenAPI tools, explicit handoff contracts, Agent → Tool → Agent boundaries |
+| **Emission Calculation Accuracy**  | Official 2026 factor dataset, hard constraint matching, deterministic calculator, exact units/formulas, fail-closed unresolved-factor behavior |
+| **Auditability & Traceability**| Source record → activity → scope → factor → formula → result → governance → disclosure lineage |
+| **Sustainability Dashboard UX**| Action-oriented governance state, Scope KPIs, factor/formula evidence, audit trail and disclosure readiness |
 
 ### Six optimization metrics
 
@@ -263,7 +263,7 @@ CarbonGuard-AI/
     ├── audit-lineage.md
     ├── greenwashing-governance.md
     ├── emission-factor-provenance.md
-    └── demo-script.md
+    
 ```
 
 ---
