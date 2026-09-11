@@ -1,0 +1,1 @@
+{"openapi":"3.0.0","info":{"title":"CarbonGuard Deterministic Calculator","version":"1.0.0"},"paths":{"/calculate":{"post":{"operationId":"calculate_emissions","requestBody":{"required":true},"responses":{"200":{"description":"Deterministic calculation result"}}}}}}

@@ -1,0 +1,53 @@
+{
+  "provider": "openai",
+  "model": "gpt-5.4-mini",
+  "top_p": 0.9,
+  "temperature": 0.7,
+  "max_iterations": 25,
+  "memory": {
+    "provider": "Cognis",
+    "cross_session": false
+  },
+  "_id": "6aa0383c9bca84c227c0dd69",
+  "name": "CarbonGuard Scope Classifier",
+  "role": "GHG Scope Classification Agent",
+  "goal": "Classify normalized activities into Scope 1, Scope 2 or Scope 3 without unsupported assumptions.",
+  "response_format": "structured_json",
+  "instructions": "Use only supplied evidence. Scope 1 covers direct emissions from owned/controlled sources. Scope 2 covers purchased electricity, steam, heating or cooling. Scope 3 covers other indirect value-chain emissions. If evidence is insufficient return REVIEW_REQUIRED. Never calculate or select factors. Include concise evidence_reason.",
+  "schema": {
+    "name": "scope_classification",
+    "strict": true,
+    "type": "object",
+    "properties": {
+      "record_id": {
+        "type": "string"
+      },
+      "scope": {
+        "type": "string",
+        "enum": [
+          "Scope 1",
+          "Scope 2",
+          "Scope 3",
+          "REVIEW_REQUIRED"
+        ]
+      },
+      "classification_status": {
+        "type": "string",
+        "enum": [
+          "CONFIRMED",
+          "REVIEW_REQUIRED"
+        ]
+      },
+      "evidence_reason": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "record_id",
+      "scope",
+      "classification_status",
+      "evidence_reason"
+    ],
+    "additionalProperties": false
+  }
+}

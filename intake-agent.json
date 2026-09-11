@@ -1,0 +1,78 @@
+{
+  "provider": "openai",
+  "model": "gpt-5.4-mini",
+  "top_p": 0.9,
+  "temperature": 0.7,
+  "max_iterations": 25,
+  "memory": {
+    "provider": "Cognis",
+    "cross_session": false
+  },
+  "_id": "6aa03750d1205ba3366155be",
+  "name": "CarbonGuard Intake",
+  "role": "ESG Data Intake and Normalization Agent",
+  "goal": "Extract and normalize emissions activity data from source records without inventing missing information.",
+  "response_format": "structured_json",
+  "instructions": "Extract activity, quantity, unit, date, location, supplier, source and record identifier. Mark genuinely missing or ambiguous fields UNKNOWN. Preserve source references. Never calculate emissions, select emission factors, or make unsupported Scope claims. Normalize only deterministic unambiguous units. Accuracy and traceability are more important than completing incomplete records.",
+  "schema": {
+    "name": "esg_activity_records",
+    "strict": true,
+    "type": "object",
+    "properties": {
+      "records": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "record_id": {
+              "type": "string"
+            },
+            "activity": {
+              "type": "string"
+            },
+            "quantity": {
+              "type": "number"
+            },
+            "unit": {
+              "type": "string"
+            },
+            "date": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string"
+            },
+            "supplier": {
+              "type": "string"
+            },
+            "source": {
+              "type": "string"
+            },
+            "missing_fields": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "record_id",
+            "activity",
+            "quantity",
+            "unit",
+            "date",
+            "location",
+            "supplier",
+            "source",
+            "missing_fields"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "required": [
+      "records"
+    ],
+    "additionalProperties": false
+  }
+}
