@@ -2,9 +2,9 @@
 
 CarbonGuard is evaluated against both the competition rubric and six engineering metrics.
 
-## Rubric scorecard
 
-### 30% — Lyzr Architecture & Tool Calling
+
+### Lyzr Architecture & Tool Calling
 
 Evidence:
 - Five specialized Lyzr agents.
@@ -16,7 +16,7 @@ Evidence:
 - Environment · Agent · Inference separation is documented.
 - Governance is explicit rather than being an afterthought.
 
-### 30% — Emission Calculation Accuracy
+### Emission Calculation Accuracy
 
 Evidence:
 - Official UK Government 2026 conversion-factor source.
@@ -26,7 +26,7 @@ Evidence:
 - No LLM arithmetic.
 - Unknown/ambiguous factors fail closed.
 
-### 20% — Auditability & Traceability
+### Auditability & Traceability
 
 Evidence:
 - Source record identifier retained.
@@ -36,7 +36,7 @@ Evidence:
 - Governance decision retained.
 - Final disclosure carries the complete lineage.
 
-### 20% — Sustainability Dashboard UX
+###  Sustainability Dashboard UX
 
 Evidence:
 - Scope KPIs.
