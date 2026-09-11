@@ -1,0 +1,1 @@
+{"openapi":"3.0.0","info":{"title":"CarbonGuard Deterministic Factor Lookup","version":"1.0.0"},"paths":{"/lookup-factor":{"post":{"operationId":"lookup_factor","responses":{"200":{"description":"Verified, review-required or not-found factor lookup"}}}}}}

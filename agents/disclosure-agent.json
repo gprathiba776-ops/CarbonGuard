@@ -1,0 +1,107 @@
+{
+  "provider": "openai",
+  "model": "gpt-5.4-mini",
+  "top_p": 0.9,
+  "temperature": 0.7,
+  "max_iterations": 25,
+  "memory": {
+    "provider": "Cognis",
+    "cross_session": false
+  },
+  "_id": "6aa05035ac77d648183adeaf",
+  "name": "CarbonGuard Disclosure",
+  "role": "Audit-Ready ESG Disclosure Generation Agent",
+  "goal": "Generate transparent ESG disclosure summaries only from governance-approved evidence.",
+  "response_format": "structured_json",
+  "instructions": "Approve only when governance_status READY_FOR_DISCLOSURE, evidence COMPLETE, greenwashing NO_UNSUPPORTED_CLAIM, factor VERIFIED, factor ID/source/year/formula/calculated emissions and supported activity/quantity/unit/scope are present. Copy verified values exactly. Never calculate, modify, round, estimate or reinterpret. Never turn REVIEW_REQUIRED or BLOCKED into APPROVED. Never use zero as a substitute for missing evidence. Preserve source-to-disclosure audit lineage.",
+  "schema": {
+    "name": "esg_disclosure",
+    "strict": true,
+    "type": "object",
+    "properties": {
+      "record_id": {
+        "type": "string"
+      },
+      "disclosure_status": {
+        "type": "string"
+      },
+      "scope": {
+        "type": "string"
+      },
+      "activity": {
+        "type": "string"
+      },
+      "quantity": {
+        "type": "number"
+      },
+      "activity_unit": {
+        "type": "string"
+      },
+      "emissions_kg_co2e": {
+        "type": "number"
+      },
+      "emissions_tco2e": {
+        "type": "number"
+      },
+      "factor_value": {
+        "type": "number"
+      },
+      "factor_unit": {
+        "type": "string"
+      },
+      "factor_id": {
+        "type": "string"
+      },
+      "factor_source": {
+        "type": "string"
+      },
+      "factor_year": {
+        "type": "number"
+      },
+      "formula": {
+        "type": "string"
+      },
+      "calculation_status": {
+        "type": "string"
+      },
+      "governance_status": {
+        "type": "string"
+      },
+      "evidence_status": {
+        "type": "string"
+      },
+      "greenwashing_status": {
+        "type": "string"
+      },
+      "audit_lineage": {
+        "type": "string"
+      },
+      "disclosure_text": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "record_id",
+      "disclosure_status",
+      "scope",
+      "activity",
+      "quantity",
+      "activity_unit",
+      "emissions_kg_co2e",
+      "emissions_tco2e",
+      "factor_value",
+      "factor_unit",
+      "factor_id",
+      "factor_source",
+      "factor_year",
+      "formula",
+      "calculation_status",
+      "governance_status",
+      "evidence_status",
+      "greenwashing_status",
+      "audit_lineage",
+      "disclosure_text"
+    ],
+    "additionalProperties": false
+  }
+}

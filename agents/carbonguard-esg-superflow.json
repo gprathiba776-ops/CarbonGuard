@@ -1,0 +1,266 @@
+{
+  "name": "CarbonGuard ESG Compliance Pipeline",
+  "nodes": [
+    {
+      "id": "19662b63-39c7-4aaf-9f1b-8b516f8da6e5",
+      "name": "Trigger",
+      "type": "lyzr-nodes-base.trigger",
+      "parameters": {
+        "triggerMode": "webhook",
+        "inputSchema": [
+          {
+            "name": "record_id",
+            "type": "string",
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "activity",
+            "type": "string",
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "quantity",
+            "type": "number",
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "unit",
+            "type": "string",
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "date",
+            "type": "string",
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "location",
+            "type": "string",
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "supplier",
+            "type": "string",
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "scope",
+            "type": "string",
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "year",
+            "type": "number",
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "category",
+            "type": "string",
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "fuel_subtype",
+            "type": "string",
+            "required": false,
+            "description": ""
+          }
+        ],
+        "webhookEnabled": true
+      },
+      "position": [
+        -36.65137410601304,
+        -309.64291726563135
+      ]
+    },
+    {
+      "id": "dfeaa427-b4ba-446f-bff5-879d2874a70b",
+      "name": "AI Agent",
+      "type": "lyzr-nodes-base.lyzr.agent",
+      "parameters": {
+        "provider": "openai",
+        "model": "gpt-4o",
+        "systemPrompt": "You are a helpful assistant.",
+        "temperature": 0.7,
+        "maxTokens": 4096,
+        "maxIterations": 25,
+        "agent_id": "6aa03750d1205ba3366155be",
+        "agent_name": "CarbonGuard Intake",
+        "prompt": "You are receiving one already-structured ESG activity record from an upstream workflow.\r\n\r\nRead the upstream data and return it as a normalized ESG activity record.\r\n\r\nDo NOT look for a user message.\r\nDo NOT ask for additional information.\r\nDo NOT return an empty records array.\r\n\r\nThe upstream record is:\r\n\r\n{{ $('Trigger').json.record_id }}{{ $('Trigger').json.activity }}{{ $('Trigger').json.quantity }}{{ $('Trigger').json.unit }}{{ $('Trigger').json.date }}{{ $('Trigger').json.location }}{{ $('Trigger').json.supplier }}{{ $('Trigger').json.scope }}{{ $('Trigger').json.year }}{{ $('Trigger').json.category }}{{ $('Trigger').json.fuel_subtype }}\r\n{{ $('Code').json.activity }}{{ $('Code').json.category }}{{ $('Code').json.date }}{{ $('Code').json.fuel_subtype }}{{ $('Code').json.location }}{{ $('Code').json.quantity }}{{ $('Code').json.record_id }}{{ $('Code').json.scope }}{{ $('Code').json.supplier }}{{ $('Code').json.unit }}{{ $('Code').json.year }}\r\nPreserve these fields exactly when present:\r\n- record_id\r\n- activity\r\n- quantity\r\n- unit\r\n- date\r\n- location\r\n- supplier\r\n- scope\r\n- year\r\n- category\r\n- fuel_subtype\r\n\r\nIf a field is genuinely absent from the upstream record, mark it as UNKNOWN and add it to missing_fields.\r\n\r\nDo not invent values.\r\nDo not calculate emissions.\r\nDo not select an emission factor.\r\nDo not classify scope.\r\n\r\nReturn exactly one record in the configured records array."
+      },
+      "position": [
+        439.14356304048727,
+        -179.86162100198922
+      ]
+    },
+    {
+      "id": "e1aaf82f-fa83-4ec3-ae21-de09e93118bd",
+      "name": "AI Agent 1",
+      "type": "lyzr-nodes-base.lyzr.agent",
+      "parameters": {
+        "provider": "openai",
+        "model": "gpt-4o",
+        "systemPrompt": "You are a helpful assistant.",
+        "temperature": 0.7,
+        "maxTokens": 4096,
+        "maxIterations": 25,
+        "agent_id": "6aa0383c9bca84c227c0dd69",
+        "agent_name": "CarbonGuard Scope Classifier",
+        "prompt": "Classify the following normalized ESG activity record.\r\n\r\nThe upstream record is: {{ $('AI Agent').json.output }}{{ $('AI Agent').json.status }}{{ $('AI Agent').json.iterations }}{{ $('AI Agent').json.input_tokens }}{{ $('AI Agent').json.output_tokens }}{{ $('AI Agent').json.activity }}{{ $('AI Agent').json.category }}{{ $('AI Agent').json.date }}{{ $('AI Agent').json.fuel_subtype }}{{ $('AI Agent').json.location }}{{ $('AI Agent').json.quantity }}{{ $('AI Agent').json.record_id }}{{ $('AI Agent').json.scope }}{{ $('AI Agent').json.supplier }}{{ $('AI Agent').json.unit }}{{ $('AI Agent').json.year }}\r\n\r\nUse the upstream record to classify the activity into Scope 1, Scope 2, or Scope 3 according to your configured responsibilities.\r\n\r\nDo not calculate emissions.\r\nDo not select an emission factor.\r\nDo not invent missing information.\r\n\r\nReturn the configured structured output."
+      },
+      "position": [
+        622.2250865107693,
+        -305.64603943814143
+      ]
+    },
+    {
+      "id": "c12ef27d-72f6-4740-bb37-1c6f68bec573",
+      "name": "AI Agent 2",
+      "type": "lyzr-nodes-base.lyzr.agent",
+      "parameters": {
+        "provider": "openai",
+        "model": "gpt-4o",
+        "systemPrompt": "You are a helpful assistant.",
+        "temperature": 0.7,
+        "maxTokens": 4096,
+        "maxIterations": 25,
+        "agent_id": "6aa047c282e318355d52dfe3",
+        "agent_name": "CarbonGuard Factor Resolver",
+        "prompt": "Resolve the emission factor for the following ESG activity record.\r\n\r\nThe original ESG record is: {{ $('AI Agent').json.output }}{{ $('AI Agent').json.status }}{{ $('AI Agent').json.iterations }}{{ $('AI Agent').json.input_tokens }}{{ $('AI Agent').json.output_tokens }}{{ $('AI Agent').json.activity }}{{ $('AI Agent').json.category }}{{ $('AI Agent').json.date }}{{ $('AI Agent').json.fuel_subtype }}{{ $('AI Agent').json.location }}{{ $('AI Agent').json.quantity }}{{ $('AI Agent').json.record_id }}{{ $('AI Agent').json.scope }}{{ $('AI Agent').json.supplier }}{{ $('AI Agent').json.unit }}{{ $('AI Agent').json.year }}\r\n\r\nThe scope classification is: {{ $('AI Agent 1').json.output }}{{ $('AI Agent 1').json.status }}{{ $('AI Agent 1').json.iterations }}{{ $('AI Agent 1').json.input_tokens }}{{ $('AI Agent 1').json.output_tokens }}{{ $('AI Agent 1').json.activity }}{{ $('AI Agent 1').json.category }}{{ $('AI Agent 1').json.date }}{{ $('AI Agent 1').json.fuel_subtype }}{{ $('AI Agent 1').json.location }}{{ $('AI Agent 1').json.quantity }}{{ $('AI Agent 1').json.record_id }}{{ $('AI Agent 1').json.scope }}{{ $('AI Agent 1').json.supplier }}{{ $('AI Agent 1').json.unit }}{{ $('AI Agent 1').json.year }}\r\n\r\nUse both upstream records together.\r\n\r\nUse the CarbonGuard deterministic Factor Lookup tool as the authoritative source.\r\n\r\nMatch the factor using the exact:\r\n- activity\r\n- scope\r\n- unit\r\n- year\r\n- category\r\n- fuel subtype when available\r\n\r\nDo not guess, estimate, calculate, round, modify, or reinterpret any factor.\r\n\r\nIf the deterministic tool returns VERIFIED, preserve the exact factor and provenance.\r\n\r\nIf it returns REVIEW_REQUIRED, do not select a factor.\r\n\r\nIf it returns FACTOR_NOT_FOUND, do not invent a replacement.\r\n\r\nOnly use the deterministic calculator after the factor is VERIFIED.\r\n\r\nReturn the configured structured output."
+      },
+      "position": [
+        833.7829483729333,
+        -98.0977477913326
+      ]
+    },
+    {
+      "id": "b4a3c820-1a36-4e9b-a2f0-d699648668bf",
+      "name": "AI Agent 3",
+      "type": "lyzr-nodes-base.lyzr.agent",
+      "parameters": {
+        "provider": "openai",
+        "model": "gpt-4o",
+        "systemPrompt": "You are a helpful assistant.",
+        "temperature": 0.7,
+        "maxTokens": 4096,
+        "maxIterations": 25,
+        "agent_id": "6aa04f4cfd2dd1e3b861a58c",
+        "agent_name": "CarbonGuard Governance",
+        "prompt": "Review the following ESG emissions record for governance, evidence completeness, auditability, and greenwashing risk.\r\n\r\nThe original workflow record is: {{ $('AI Agent').json.output }}{{ $('AI Agent').json.status }}{{ $('AI Agent').json.iterations }}{{ $('AI Agent').json.input_tokens }}{{ $('AI Agent').json.output_tokens }}{{ $('AI Agent').json.activity }}{{ $('AI Agent').json.category }}{{ $('AI Agent').json.date }}{{ $('AI Agent').json.fuel_subtype }}{{ $('AI Agent').json.location }}{{ $('AI Agent').json.quantity }}{{ $('AI Agent').json.record_id }}{{ $('AI Agent').json.scope }}{{ $('AI Agent').json.supplier }}{{ $('AI Agent').json.unit }}{{ $('AI Agent').json.year }}\r\n\r\nThe scope classification is: {{ $('AI Agent 1').json.output }}{{ $('AI Agent 1').json.status }}{{ $('AI Agent 1').json.iterations }}{{ $('AI Agent 1').json.input_tokens }}{{ $('AI Agent 1').json.output_tokens }}{{ $('AI Agent 1').json.activity }}{{ $('AI Agent 1').json.category }}{{ $('AI Agent 1').json.date }}{{ $('AI Agent 1').json.fuel_subtype }}{{ $('AI Agent 1').json.location }}{{ $('AI Agent 1').json.quantity }}{{ $('AI Agent 1').json.record_id }}{{ $('AI Agent 1').json.scope }}{{ $('AI Agent 1').json.supplier }}{{ $('AI Agent 1').json.unit }}{{ $('AI Agent 1').json.year }}\r\n\r\nThe verified factor and deterministic calculation are: {{ $('AI Agent 2').json.output }}{{ $('AI Agent 2').json.status }}{{ $('AI Agent 2').json.iterations }}{{ $('AI Agent 2').json.input_tokens }}{{ $('AI Agent 2').json.output_tokens }}{{ $('AI Agent 2').json.activity }}{{ $('AI Agent 2').json.category }}{{ $('AI Agent 2').json.date }}{{ $('AI Agent 2').json.fuel_subtype }}{{ $('AI Agent 2').json.location }}{{ $('AI Agent 2').json.quantity }}{{ $('AI Agent 2').json.record_id }}{{ $('AI Agent 2').json.scope }}{{ $('AI Agent 2').json.supplier }}{{ $('AI Agent 2').json.unit }}{{ $('AI Agent 2').json.year }}\r\n\r\nReview all upstream records together.\r\n\r\nImportant:\r\nThe Intake Agent may list fields as missing when those fields are intentionally handled by downstream agents. Do not treat a field as missing if the same field is explicitly and reliably provided by another upstream record.\r\n\r\nFor this review, establish the final evidence package from ALL upstream records together.\r\n\r\nVerify that:\r\n- the emission factor is VERIFIED\r\n- factor source is present\r\n- factor year is present\r\n- factor ID is present\r\n- factor unit is present\r\n- deterministic formula is present\r\n- calculated emissions result is present\r\n- activity is supported\r\n- quantity and unit are supported\r\n- scope is supported by the Scope Classifier\r\n- year is supported by the workflow record or factor resolution\r\n- category is supported when required for factor selection\r\n- the evidence is sufficient for audit traceability\r\n- there are no unsupported environmental claims\r\n\r\nDo not calculate emissions yourself.\r\n\r\nDo not invent missing evidence.\r\n\r\nDo not infer a reduction percentage without verified baseline and current values.\r\n\r\nDo not treat incomplete Scope 3 information as complete.\r\n\r\nIf all required evidence is available across the upstream records and there is no unsupported claim, return READY_FOR_DISCLOSURE.\r\n\r\nIf material evidence is genuinely absent across ALL upstream records, return REVIEW_REQUIRED.\r\n\r\nIf an upstream result is BLOCKED or unresolved, preserve the blocked/review state.\r\n\r\nReturn the configured structured output."
+      },
+      "position": [
+        1046.643310273916,
+        -334.3952666767955
+      ]
+    },
+    {
+      "id": "ea31261d-862e-4792-900a-e343b64aa261",
+      "name": "AI Agent 4",
+      "type": "lyzr-nodes-base.lyzr.agent",
+      "parameters": {
+        "provider": "openai",
+        "model": "gpt-4o",
+        "systemPrompt": "You are a helpful assistant.",
+        "temperature": 0.7,
+        "maxTokens": 4096,
+        "maxIterations": 25,
+        "agent_id": "6aa05035ac77d648183adeaf",
+        "agent_name": "CarbonGuard Disclosure",
+        "prompt": "Generate an audit-ready ESG disclosure from the following upstream evidence.\r\n\r\nThe original ESG activity record is: {{ $('AI Agent').json.output }}{{ $('AI Agent').json.status }}{{ $('AI Agent').json.iterations }}{{ $('AI Agent').json.input_tokens }}{{ $('AI Agent').json.output_tokens }}{{ $('AI Agent').json.activity }}{{ $('AI Agent').json.category }}{{ $('AI Agent').json.date }}{{ $('AI Agent').json.fuel_subtype }}{{ $('AI Agent').json.location }}{{ $('AI Agent').json.quantity }}{{ $('AI Agent').json.record_id }}{{ $('AI Agent').json.scope }}{{ $('AI Agent').json.supplier }}{{ $('AI Agent').json.unit }}{{ $('AI Agent').json.year }}\r\n\r\nThe scope classification is: {{ $('AI Agent 1').json.output }}{{ $('AI Agent 1').json.status }}{{ $('AI Agent 1').json.iterations }}{{ $('AI Agent 1').json.input_tokens }}{{ $('AI Agent 1').json.output_tokens }}{{ $('AI Agent 1').json.activity }}{{ $('AI Agent 1').json.category }}{{ $('AI Agent 1').json.date }}{{ $('AI Agent 1').json.fuel_subtype }}{{ $('AI Agent 1').json.location }}{{ $('AI Agent 1').json.quantity }}{{ $('AI Agent 1').json.record_id }}{{ $('AI Agent 1').json.scope }}{{ $('AI Agent 1').json.supplier }}{{ $('AI Agent 1').json.unit }}{{ $('AI Agent 1').json.year }}\r\n\r\nThe verified factor and deterministic calculation are: {{ $('AI Agent 2').json.output }}{{ $('AI Agent 2').json.status }}{{ $('AI Agent 2').json.iterations }}{{ $('AI Agent 2').json.input_tokens }}{{ $('AI Agent 2').json.output_tokens }}{{ $('AI Agent 2').json.activity }}{{ $('AI Agent 2').json.category }}{{ $('AI Agent 2').json.date }}{{ $('AI Agent 2').json.fuel_subtype }}{{ $('AI Agent 2').json.location }}{{ $('AI Agent 2').json.quantity }}{{ $('AI Agent 2').json.record_id }}{{ $('AI Agent 2').json.scope }}{{ $('AI Agent 2').json.supplier }}{{ $('AI Agent 2').json.unit }}{{ $('AI Agent 2').json.year }}\r\n\r\nThe governance review is: {{ $('AI Agent 3').json.output }}{{ $('AI Agent 3').json.status }}{{ $('AI Agent 3').json.iterations }}{{ $('AI Agent 3').json.input_tokens }}{{ $('AI Agent 3').json.output_tokens }}{{ $('AI Agent 3').json.activity }}{{ $('AI Agent 3').json.category }}{{ $('AI Agent 3').json.date }}{{ $('AI Agent 3').json.fuel_subtype }}{{ $('AI Agent 3').json.fuel_subtype }}{{ $('AI Agent 3').json.location }}{{ $('AI Agent 3').json.quantity }}{{ $('AI Agent 3').json.record_id }}{{ $('AI Agent 3').json.scope }}{{ $('AI Agent 3').json.supplier }}{{ $('AI Agent 3').json.unit }}{{ $('AI Agent 3').json.year }}\r\n\r\nUse all upstream records together as the complete evidence package.\r\n\r\nA disclosure may be APPROVED only when:\r\n- governance_status = READY_FOR_DISCLOSURE\r\n- evidence_status = COMPLETE\r\n- greenwashing_status = NO_UNSUPPORTED_CLAIM\r\n- factor_status = VERIFIED\r\n- factor ID is present\r\n- factor source is present\r\n- factor year is present\r\n- deterministic formula is present\r\n- calculated emissions are present\r\n- activity, quantity, unit, and scope are supported\r\n\r\nCopy verified values exactly.\r\n\r\nDo not calculate emissions yourself.\r\nDo not modify, round, estimate, or reinterpret numerical values.\r\nDo not invent missing information.\r\nDo not turn REVIEW_REQUIRED or BLOCKED into APPROVED.\r\nDo not use zero as a substitute for missing evidence.\r\n\r\nPreserve the complete audit lineage from source record to activity, scope, factor, formula, emissions result, and governance decision.\r\n\r\nReturn the configured structured output."
+      },
+      "position": [
+        1313.4320884933406,
+        -224.69463024262922
+      ]
+    },
+    {
+      "id": "df3fe31a-4884-49b1-a290-829240294f14",
+      "name": "Code",
+      "type": "lyzr-nodes-base.code",
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nreturn items.map(item => ({\n  ...item,\n  quantity: Number(item.quantity),\n  year: Number(item.year)\n}));"
+      },
+      "position": [
+        386.6833613325734,
+        48.38042425316158
+      ]
+    }
+  ],
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "AI Agent 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent 1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent 2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent 3": {
+      "main": [
+        [
+          {
+            "node": "AI Agent 4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
