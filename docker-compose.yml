@@ -1,0 +1,35 @@
+services:
+  factor-api:
+    build: ./backend/factor-api
+    ports:
+      - "8001:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  calculator-api:
+    build: ./backend/calculator-api
+    ports:
+      - "8002:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      SUPERFLOW_WEBHOOK_URL: ${SUPERFLOW_WEBHOOK_URL:-https://inference.studio.lyzr.ai/api/workflows/execute}
+      SUPERFLOW_API_KEY: ${SUPERFLOW_API_KEY:-}
+      LYZR_API_KEY: ${LYZR_API_KEY:-}
+      WORKFLOW_ID: ${WORKFLOW_ID:-}
+    depends_on:
+      factor-api:
+        condition: service_healthy
+      calculator-api:
+        condition: service_healthy
