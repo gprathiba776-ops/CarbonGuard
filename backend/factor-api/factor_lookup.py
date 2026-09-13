@@ -11,9 +11,11 @@ import re
 from pathlib import Path
 from typing import Any
 
-REGISTRY_PATH = Path(__file__).with_name("factors.json")
-YEAR = 2026
-SOURCE = "UK Government GHG Conversion Factors 2026 — revised July 2026 flat file"
+from config import settings
+
+REGISTRY_PATH = Path(settings.REGISTRY_PATH)
+YEAR = settings.YEAR
+SOURCE = settings.SOURCE
 
 
 def _norm(value: Any) -> str:
