@@ -31,3 +31,29 @@ def lookup():
         return jsonify({"status": "FACTOR_NOT_FOUND", "reason": f"Invalid request: {exc}", "matches": []}), 400
 
     return jsonify(result), 200
+
+@app.get("/health")
+def health():
+    return {
+        "status": "ok",
+        "service": "carbonguard-factor-api"
+    }
+
+
+@app.get("/ready")
+def ready():
+    try:
+        # Force-load the factor registry to verify it is available.
+        load_registry()
+
+        return {
+            "status": "ready",
+            "service": "carbonguard-factor-api",
+            "factor_year": YEAR
+        }
+    except Exception as exc:
+        return {
+            "status": "not_ready",
+            "service": "carbonguard-factor-api",
+            "error": str(exc)
+        }, 503
